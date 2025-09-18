@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dadaw Explore — Temukan Keagungan Alam</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p1CmX+YB8o5x0dQFfYqf9zYg6fQx0n1ZJf4k6q3p2o9bGZ0kFz5X1ZV1yq6X0D3QKx6G7l5eR7Q0b2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <meta name="description" content="Dadaw Explore — platform paket pendakian, galeri, dan inspirasi untuk pecinta gunung.">
+
+  <style>
+    /* =========================
+       Variables & Base
+       ========================= */
+    :root{
+      --primary: #2D4C47;       /* hijau tua elegan */
+      --secondary: #E3C891;     /* krem kekuningan */
+      --bg: #F8F5F0;            /* putih krem sangat lembut */
+      --text: #333333;
+      --muted: #6b6b6b;
+      --white: #ffffff;
+      --radius: 12px;
+      --transition: 280ms ease;
+      --max-width: 1200px;
+      --safe-bottom: env(safe-area-inset-bottom);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Open Sans',system-ui,Arial,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%;height:auto;}
+
+/* =========================
+   Layout & Utilities
+   ========================= */
+.container{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+.flex{display:flex}
+.center{display:flex;align-items:center;justify-content:center}
+.section{padding:64px 0}
+
+/* small utility */
+.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+
+/* =========================
+   NAVBAR
+   ========================= */
+.navbar{
+  position:sticky;
+  top:0;
+  z-index:120;
+  backdrop-filter: blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px;
+  transition:background var(--transition),box-shadow var(--transition),padding var(--transition);
+  -webkit-backdrop-filter: blur(6px);
+}
+.navbar.inner{max-width:var(--max-width);margin:0 auto;width:100%;}
+
+.brand{
+  font-family:'Poppins';
+  font-weight:700;
+  font-size:20px;
+  color:var(--primary);
+  letter-spacing:0.2px;
+}
+
+/* menu desktop */
+.nav-links{
+  display:flex;
+  gap:22px;
+  align-items:center;
+}
+.nav-links a{font-weight:600;color:var(--text);padding:8px 10px;border-radius:8px;transition:background var(--transition),color var(--transition)}
+.nav-links a:hover{background:rgba(45,76,71,0.06)}
+
+/* CTA in navbar */
+.nav-cta{background:var(--primary);color:var(--white);padding:8px 14px;border-radius:10px;font-weight:700;box-shadow:0 8px 20px rgba(45,76,71,0.08);transition:transform var(--transition)}
+.nav-cta:hover{transform:translateY(-3px)}
+
+/* transparent initial -> on scroll becomes solid */
+.navbar.transparent{background:transparent}
+.navbar.solid{background:var(--white);box-shadow:0 8px 30px rgba(17,17,17,0.06);}
+
+/* mobile nav */
+.hamburger{
+  display:none;
+  background:none;border:0;font-size:20px;color:var(--text);cursor:pointer;
+}
+
+/* mobile dropdown - revised to fullscreen drawer */
+.mobile-drawer{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(11,13,11,0.6), rgba(11,13,11,0.8));
+  z-index:210;
+  align-items:flex-start;
+  padding:20px;
+  transform:translateY(-8px);
+  opacity:0;
+  transition:transform 240ms ease,opacity 240ms ease;
+}
+.mobile-drawer.open{display:flex;opacity:1;transform:translateY(0);}
+.mobile-drawer .drawer-inner{background:var(--white);width:100%;max-width:420px;border-radius:14px;padding:18px;margin-top:30px;box-shadow:0 30px 60px rgba(0,0,0,0.25)}
+.mobile-menu a{display:block;padding:12px 10px;border-radius:8px;color:var(--text);font-weight:600}
+.mobile-menu a:hover{background:rgba(45,76,71,0.04)}
+
+/* =========================
+   HERO
+   ========================= */
+.hero{
+  min-height:78vh;
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+  padding:24px 0;
+}
+.hero::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(11,13,11,0.45), rgba(11,13,11,0.55));
+  z-index:1;
+}
+.hero-inner{
+  position:relative;z-index:2;
+  text-align:center;color:var(--white);
+  padding:20px;
+}
+.hero h1{font-family:'Poppins';font-size:clamp(28px,6vw,48px);margin:0 0 12px;line-height:1.1}
+.hero p{margin:0 0 18px;font-weight:300;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.6}
+.hero .cta-group{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{
+  padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer;transition:transform var(--transition),opacity var(--transition);
+  border:0;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{background:var(--primary);color:var(--white);box-shadow:0 10px 30px rgba(45,76,71,0.12)}
+.btn-secondary{background:rgba(255,255,255,0.12);color:var(--white);backdrop-filter:blur(2px);border:1px solid rgba(255,255,255,0.06)}
+.btn:hover{transform:translateY(-4px)}
+
+/* floating bottom CTA for mobile */
+.bottom-cta{
+  display:none;
+  position:fixed;
+  left:16px;
+  right:16px;
+  bottom:calc(16px + var(--safe-bottom));
+  z-index:200;
+  justify-content:center;
+  gap:12px;
+}
+
+/* =========================
+   INTRO (About Dadaw Explore)
+   ========================= */
+.intro{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:28px;
+  align-items:center;
+}
+.intro .about-card{background:var(--white);padding:24px;border-radius:14px;box-shadow:0 12px 30px rgba(16,16,16,0.06)}
+.intro h2{font-family:'Poppins';margin:0 0 8px;color:var(--primary)}
+.feature-icons{display:flex;gap:12px;flex-direction:column}
+.icon-row{display:flex;gap:12px;align-items:center}
+.icon{
+  width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,rgba(227,200,145,0.12),rgba(227,200,145,0.06));display:grid;place-items:center;color:var(--primary);font-size:20px;
+}
+
+/* =========================
+   GALLERY
+   ========================= */
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.gallery-item{position:relative;overflow:hidden;border-radius:12px;min-height:140px}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 420ms cubic-bezier(.2,.9,.2,1)}
+.gallery-item:hover img{transform:scale(1.07)}
+.gallery-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:10px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.45));opacity:0;transition:opacity 220ms ease}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-title{color:#fff;font-weight:700;font-family:'Poppins'}
+
+/* =========================
+   TESTIMONIALS
+   ========================= */
+.testimonials-wrap{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.testimonials-wrap::-webkit-scrollbar {height: 6px;}
+.testimonials-wrap::-webkit-scrollbar-thumb {background: #ccc; border-radius: 10px;}
+.test-card{min-width:280px;background:var(--white);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(17,17,17,0.06);flex-shrink:0}
+.test-card p{margin:0 0 12px;font-style:italic;color:var(--muted);line-height:1.5}
+.test-card .meta{display:flex;gap:10px;align-items:center}
+.avatar{width:44px;height:44px;border-radius:999px;background:#ddd;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+
+/* =========================
+   CTA BANNER
+   ========================= */
+.cta-banner{
+  background:linear-gradient(90deg, rgba(45,76,71,0.95), rgba(64,145,108,0.92));
+  color:var(--white);
+  padding:32px 20px;border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.cta-banner h3{font-family:'Poppins';margin:0}
+.cta-banner p{margin:0;color:rgba(255,255,255,0.9);line-height:1.5}
+
+/* =========================
+   FOOTER
+   ========================= */
+footer{margin-top:40px;padding:36px 20px;color:var(--muted)}
+.footer-inner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start}
+.socials a{margin-right:12px;color:var(--text)}
+.quick-links a{display:block;padding:6px 0;color:var(--text)}
+.copy{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width:1200px){
+  .gallery-grid{grid-template-columns:repeat(3,1fr)}
+  .intro{grid-template-columns:1fr 300px}
+}
+
+@media (max-width:1024px){
+  .gallery-grid{grid-template-columns:repeat(3,1fr)}
+  .intro{grid-template-columns:1fr}
+  .intro .about-card{order:2}
+  .hero{min-height:72vh}
+}
+
+@media (max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:block}
+  .hero h1{font-size:28px}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .testimonials-wrap{overflow-x: auto; padding-bottom: 15px;}
+  .cta-banner{flex-direction:column;align-items:flex-start; text-align: center;}
+  .cta-banner .btn {width: 100%; margin-top: 10px;}
+  .footer-inner{grid-template-columns:1fr; gap: 30px;}
+  .section {padding: 40px 0;}
+  .bottom-cta{display:flex}
+  .mobile-drawer{display:flex}
+  .mobile-drawer .drawer-inner{margin-left:auto;margin-right:auto}
+  .intro .about-card{padding:18px}
+  .hero p{font-size:15px}
+}
+
+/* extra small */
+@media (max-width:480px){
+  .gallery-grid{grid-template-columns:1fr}
+  .hero{min-height:60vh;padding-top:18px;padding-bottom:18px}
+  .hero p {font-size: 14px;}
+  .btn {padding: 10px 16px; font-size: 14px;}
+  .intro .about-card {padding: 14px;}
+  .icon-row {flex-direction: column; text-align: center;}
+  .icon-row .icon {margin-bottom: 10px;}
+  .test-card{min-width:240px;padding:14px}
+  .brand{font-size:18px}
+  .mobile-drawer .drawer-inner{width:92%;max-width:420px}
+}
+
+/* smooth scroll & utility */
+html{scroll-behavior:smooth}
+/* offset anchor target (for sticky navbar) */
+:target{scroll-margin-top:90px}
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar transparent" id="navbar" role="banner">
+    <div class="container inner" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <img src="desain1.png" alt="Logo" style="height:40px;">
+      <div class="brand">Dadaw Explore</div>
+
+      <!-- desktop links -->
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="#contact" class="nav-cta" style="margin-left:8px">Hubungi</a>
+      </nav>
+
+      <!-- hamburger for mobile -->
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile drawer (fullscreen overlay) -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="drawer-inner" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div id="drawerTitle" style="font-weight:700;font-family:'Poppins';color:var(--primary)">Menu</div>
+        <button id="drawerClose" aria-label="Tutup menu" style="background:none;border:0;font-size:20px"><i class="fas fa-times"></i></button>
+      </div>
+      <nav class="mobile-menu" aria-label="Mobile navigation">
+        <a href="#home" data-nav>Home</a>
+        <a href="#gallery" data-nav>Gallery</a>
+        <a href="#about" data-nav>About</a>
+        <a href="#testimonials" data-nav>Testimoni</a>
+        <a href="#contact" data-nav>Contact</a>
+        <a href="#contact" class="nav-cta" style="display:block;margin-top:6px;text-align:center">Hubungi</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" class="hero" style="background-image:url('bromo.jpeg'); background-size:cover; background-position:center;">
+    <div class="hero-inner container">
+      <h1>Temukan Keagungan Alam</h1>
+      <p>Jelajahi gunung-gunung terindah di Indonesia dengan pemandangan yang memukau. Temukan inspirasi dan panduan untuk perjalanan mendaki</p>
+      <div class="cta-group">
+        <button class="btn btn-primary" id="btnExplore" aria-label="Jelajahi paket">Jelajahi Sekarang <i class="fas fa-compass" aria-hidden="true"></i></button>
+        <a href="#contact" class="btn btn-secondary" aria-label="Hubungi kami">Kontak</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+
+    <!-- INTRO / ABOUT -->
+    <section class="section container" id="about">
+      <div class="intro">
+        <div class="about-card">
+          <h2>Tentang Dadaw Explore</h2>
+          <p style="color:var(--muted);line-height:1.7">Dadaw Explore berdiri untuk menghubungkan pencinta alam dengan pengalaman pendakian yang aman, terorganisir, dan penuh makna. Visi kami: membuat pendakian dapat diakses sambil menjaga kelestarian alam.</p>
+
+          <div style="margin-top:16px" class="feature-icons">
+            <div class="icon-row">
+              <div class="icon"><i class="fas fa-map-marked-alt" aria-hidden="true"></i></div>
+              <div>
+                <div style="font-weight:700">Trek Sesuai Kemampuan</div>
+                <div style="color:var(--muted);font-size:14px">Kami memahami bahwa setiap pendaki memiliki level yang berbeda. Jelajahi pilihan trek yang telah kami kategorikan khusus berdasarkan tingkat kesulitan, estimasi durasi, dan kondisi medan. Pastikan petualangan Anda berkesan tanpa rasa khawatir</div>
+              </div>
+            </div>
+
+            <div class="icon-row">
+              <div class="icon"><i class="fas fa-hiking" aria-hidden="true"></i></div>
+              <div>
+                <div style="font-weight:700">Pilih Tantanganmu</div>
+                <div style="color:var(--muted);font-size:14px">Setiap pendaki itu unik. Temukan gunung yang paling cocok dengan level petualangan dan ambisi Anda. Jelajahi, rasakan, dan nikmati explore!</div>
+              </div>
+            </div>
+
+            <div class="icon-row">
+              <div class="icon"><i class="fas fa-leaf" aria-hidden="true"></i></div>
+              <div>
+                <div style="font-weight:700">Kelestarian</div>
+                <div style="color:var(--muted);font-size:14px">Setiap petualangan adalah komitmen. Kami mengajak Anda untuk menjelajahi keindahan alam dengan penuh penghormatan, memastikan gunung tetap lestari untuk dinikmati anak cucu kita nanti</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;gap:12px">
+          <div style="background:linear-gradient(180deg,rgba(45,76,71,0.06),rgba(227,200,145,0.06));padding:20px;border-radius:12px">
+            <h3 style="margin:0 0 6px;font-family:'Poppins';color:var(--primary)">Siap Untuk Petualangan?</h3>
+            <p style="margin:0;color:var(--muted)">Jangan biarkan itu hanya menjadi rencana. Langkahkan kakimu sekarang dan ukir setiap momen petualangan yang abadi    </p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="background:var(--white);padding:12px;border-radius:10px;box-shadow:0 8px 18px rgba(17,17,17,0.04)">
+              <div style="font-weight:700">Satu Tim, Satu Cerita</div>
+              <div style="color:var(--muted);font-size:13px">Karena setiap perjalanan adalah cerita yang ditulis bersama.</div>
+            </div>
+            <div style="background:var(--white);padding:12px;border-radius:10px;box-shadow:0 8px 18px rgba(17,17,17,0.04)">
+              <div style="font-weight:700">Peralatan</div>
+              <div style="color:var(--muted);font-size:13px">Sewa & checklist</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- GALLERY -->
+    <section class="section container" id="gallery" style="padding-top:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="font-family:'Poppins';margin:0;color:var(--primary)">Galeri</h2>
+      </div>
+
+      <div class="gallery-grid" aria-live="polite">
+        <figure class="gallery-item">
+          <img src="campcer.jpeg" alt="camp-pasir-luhur" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Pasir-Luhur</div></figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="ciremai.jpeg" alt="gunung ciremai" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Ciremai</div></figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="merbabu.jpeg" alt="merbabu" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Merbabu</div></figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="pangrango.jpeg" alt="pangrango" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Pangrango</div></figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="pasirluhur.jpeg" alt="curug-Pasir-Luhur" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Curug-Pasir-Luhur</div></figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="prau.jpeg" alt="prau" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Prau</div></figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="pulaupari.jpeg" alt="pemandangan Puncak" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Pulau-Pari</div></figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="salak.jpeg" alt="salak" loading="lazy">
+          <figcaption class="gallery-overlay"><div class="gallery-title">Gn-Salak</div></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section container" id="testimonials">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="font-family:'Poppins';margin:0;color:var(--primary)">Testimoni</h2>
+        <div style="color:var(--muted)">Suara para pendaki</div>
+      </div>
+
+      <div class="testimonials-wrap" id="testWrap" aria-live="polite">
+        <article class="test-card">
+          <p>"Pengalaman luar biasa — pemandu ramah, pemandangan memukau. Saya akan kembali!"</p>
+          <div class="meta">
+            <div class="avatar"><img src="lukman.jpg" alt="lukman"></div>
+            <div>
+              <div style="font-weight:700">Lukman s.kom.</div>
+              <div style="font-size:13px;color:var(--muted)">Jakarta Barat</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="test-card">
+          <p>"Ciremai sunrise membuat semua lelah terbayar. Organisasi rapi dan aman."</p>
+          <div class="meta">
+            <div class="avatar"><img src="faris.jpg" alt="fariz"></div>
+            <div>
+              <div style="font-weight:700">Fariz</div>
+              <div style="font-size:13px;color:var(--muted)">Tangerang</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="test-card">
+          <p>"Rekomendasi perlengkapan dan checklist sangat membantu untuk pendakian perdana saya."</p>
+          <div class="meta">
+            <div class="avatar"><img src="rafly.jpg" alt="rafly"></div>
+            <div>
+              <div style="font-weight:700">Rafly</div>
+              <div style="font-size:13px;color:var(--muted)">Ketapang</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <section class="section container" style="padding-top:10px">
+      <div class="cta-banner">
+        <div>
+          <h3>Siap untuk Petualangan Berikutnya?</h3>
+          <p>Hubungi tim kami untuk konsultasi, tanggal, dan persiapan. Kami siap membantu.</p>
+        </div>
+        <div style="display:flex;gap:12px; flex-wrap: wrap;">
+          <a href="#contact" class="btn btn-secondary" style="align-self:center">Kontak</a>
+          <a href="#contact" class="btn btn-primary">Hubungi Kami Sekarang</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / FOOTER INFO -->
+    <section id="contact" class="section container" style="padding-top:20px">
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
+        <div>
+          <h3 style="font-family:'Poppins';margin:0;color:var(--primary)">Dadaw Explore</h3>
+          <p style="color:var(--muted);margin-top:8px; line-height: 1.6">Platform pendakian, galeri, dan panduan untuk pecinta alam. Kirimkan pertanyaan ke email atau telepon kami.</p>
+
+          <div style="margin-top:12px">
+            <div style="display:flex;gap:8px;align-items:center"><i class="fas fa-envelope"></i> <a href="mailto:alfarisihaddad@gmail.com" style="color:var(--text);margin-left:8px">alfarisihaddad@gmail.com</a></div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:6px"><i class="fas fa-phone"></i> <a href="tel:+628123456789" style="color:var(--text);margin-left:8px">+62 899-8677-650</a></div>
+          </div>
+        </div>
+
+        <div style="background:var(--white);padding:18px;border-radius:12px;box-shadow:0 12px 30px rgba(17,17,17,0.04)">
+          <h4 style="margin:0 0 8px;font-family:'Poppins'">Quick Links</h4>
+          <div class="quick-links">
+            <a href="#home">Home</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+          </div>
+
+          <div style="margin-top:12px">
+            <div style="font-weight:700;margin-bottom:8px">Ikuti Kami</div>
+            <div class="socials">
+              <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+              <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- floating bottom CTA for mobile -->
+  <div class="bottom-cta container" role="region" aria-label="Tombol cepat">
+    <button class="btn btn-primary" id="bottomExplore" style="flex:1">Jelajahi</button>
+    <a href="#contact" class="btn btn-secondary" style="flex:1;text-align:center">Kontak</a>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <div style="font-family:'Poppins';font-weight:700;color:var(--primary)">Dadaw Explore</div>
+        <div style="color:var(--muted);margin-top:8px">Jelajahi. Lindungi. Ceritakan.</div>
+      </div>
+
+      <div>
+        <div style="font-weight:700;margin-bottom:8px">Quick Links</div>
+        <div class="quick-links">
+          <a href="#home">Home</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-weight:700;margin-bottom:8px">Kontak</div>
+        <div style="color:var(--muted); line-height: 1.5">alfarisihaddad@gmail.com<br>+62 899-8677-650</div>
+        <div style="margin-top:12px">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook" style="margin-left:8px"><i class="fab fa-facebook"></i></a>
+          <a href="#" aria-label="Twitter" style="margin-left:8px"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container copy">
+      © 2025 Dadaw Explore. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Minimal JS for interactions -->
+  <script>
+    // Elements
+    const navbar = document.getElementById('navbar');
+    const hamburger = document.getElementById('hamburger');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const drawerClose = document.getElementById('drawerClose');
+    const btnExplore = document.getElementById('btnExplore');
+    const bottomExplore = document.getElementById('bottomExplore');
+    const mobileNavLinks = document.querySelectorAll('[data-nav]');
+    const galleryGrid = document.querySelector('.gallery-grid');
+    const testWrap = document.getElementById('testWrap');
+
+    // 1) Navbar: change style on scroll
+    function handleScroll() {
+      if(window.scrollY > 60) {
+        navbar.classList.add('solid');
+        navbar.classList.remove('transparent');
+      } else {
+        navbar.classList.remove('solid');
+        navbar.classList.add('transparent');
+      }
+    }
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    // 2) Mobile drawer toggle
+    function openDrawer() {
+      mobileDrawer.classList.add('open');
+      mobileDrawer.setAttribute('aria-hidden', 'false');
+      hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden'; // prevent background scroll
+    }
+    function closeDrawer() {
+      mobileDrawer.classList.remove('open');
+      mobileDrawer.setAttribute('aria-hidden', 'true');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = ''; // restore scroll
+    }
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileDrawer.classList.contains('open');
+      if(isOpen) closeDrawer(); else openDrawer();
+    });
+    drawerClose.addEventListener('click', closeDrawer);
+
+    // Close drawer when clicking outside drawer-inner
+    mobileDrawer.addEventListener('click', (e) => {
+      if(e.target === mobileDrawer) closeDrawer();
+    });
+
+    // Close mobile drawer when clicking a link
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        closeDrawer();
+      });
+    });
+
+    // 3) Smooth scroll: offset for sticky navbar
+    // We rely on CSS scroll-behavior; add small offset when using JS navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        // don't double-handle if link is external mailto/tel
+        const href = this.getAttribute('href');
+        if(!href || href.indexOf('#') !== 0) return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if(!target) return;
+        const rect = target.getBoundingClientRect();
+        const offset = window.scrollY + rect.top - 72; // 72px offset for navbar
+        window.scrollTo({top: offset, behavior: 'smooth'});
+      });
+    });
+
+    // 4) CTA buttons: scroll to gallery or contact as example
+    btnExplore && btnExplore.addEventListener('click', (e) => {
+      e.preventDefault();
+      const el = document.getElementById('gallery');
+      if(el){
+        const top = window.scrollY + el.getBoundingClientRect().top - 72;
+        window.scrollTo({top, behavior:'smooth'});
+      }
+    });
+    bottomExplore && bottomExplore.addEventListener('click', (e) => {
+      e.preventDefault();
+      const el = document.getElementById('gallery');
+      if(el){
+        const top = window.scrollY + el.getBoundingClientRect().top - 72;
+        window.scrollTo({top, behavior:'smooth'});
+      }
+    });
+
+    // 5) Make gallery images focusable & add keyboard interaction for accessibility
+    document.querySelectorAll('.gallery-item').forEach((item, idx) => {
+      item.setAttribute('tabindex', '0');
+      item.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          // scroll item into view (like open lightbox - simple behavior)
+          e.preventDefault();
+          item.scrollIntoView({behavior:'smooth', block:'center'});
+          item.querySelector('images').classList.add('focus-flash');
+          setTimeout(()=> item.querySelector('images').classList.remove('focus-flash'), 600);
+        }
+      });
+    });
+
+    // small visual when focused via keyboard
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .gallery-item:focus {outline: 3px solid rgba(45,76,71,0.12);outline-offset:4px;border-radius:12px}
+      .focus-flash { transform: scale(1.03); transition: transform 260ms ease; }
+    `;
+    document.head.appendChild(style);
+
+    // 6) Testimonials: enable drag-to-scroll and touch swipe
+    (function enableDragScroll(container){
+      let isDown = false;
+      let startX, scrollLeft;
+      container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        container.classList.add('active');
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+      });
+      container.addEventListener('mouseleave', () => { isDown = false; container.classList.remove('active'); });
+      container.addEventListener('mouseup', () => { isDown = false; container.classList.remove('active'); });
+      container.addEventListener('mousemove', (e) => {
+        if(!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 1.6; // scroll-fast
+        container.scrollLeft = scrollLeft - walk;
+      });
+
+      // touch equivalents
+      let touchStartX = 0, touchScrollLeft = 0;
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].pageX;
+        touchScrollLeft = container.scrollLeft;
+      }, {passive:true});
+      container.addEventListener('touchmove', (e) => {
+        const dx = e.touches[0].pageX - touchStartX;
+        container.scrollLeft = touchScrollLeft - dx;
+      }, {passive:true});
+    })(testWrap);
+
+    // 7) Simple responsive improvements: ensure hero background covers on mobile
+    function handleResize() {
+      // if small screens, reduce hero min-height
+      if(window.innerWidth <= 480){
+        document.querySelector('.hero').style.minHeight = '56vh';
+      } else {
+        document.querySelector('.hero').style.minHeight = '';
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    // 8) Keyboard accessibility: Escape closes mobile drawer
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') {
+        if(mobileDrawer.classList.contains('open')) closeDrawer();
+      }
+    });
+
+    // 9) Prevent layout shift due to fonts: add small on-load class
+    window.addEventListener('load', () => {
+      document.documentElement.classList.add('fonts-loaded');
+    });
+
+    // 10) Lazy enhancement: if gallery grid is very long, add "show more" (example)
+    (function maybeAddShowMore(grid){
+      if(!grid) return;
+      const items = grid.querySelectorAll('.gallery-item');
+      if(items.length > 6 && window.innerWidth <= 768) {
+        // hide beyond 6 items on small screen, add button
+        items.forEach((it, i) => { if(i >= 6) it.style.display = 'none'; });
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-primary';
+        btn.style.display = 'block';
+        btn.style.margin = '12px auto 0';
+        btn.textContent = 'Tampilkan Semua Foto';
+        btn.addEventListener('click', () => {
+          items.forEach(it => it.style.display = '');
+          btn.remove();
+        });
+        grid.parentNode.appendChild(btn);
+      }
+    })(galleryGrid);
+
+    // optional: announce screen-reader message when mobile drawer opens/closes
+    function ariaAnnounce(message) {
+      let live = document.getElementById('ariaLive');
+      if(!live){
+        live = document.createElement('div');
+        live.id = 'ariaLive';
+        live.className = 'visually-hidden';
+        live.setAttribute('aria-live','polite');
+        document.body.appendChild(live);
+      }
+      live.textContent = message;
+    }
+    // tie to drawer open/close
+    const obs = new MutationObserver(() => {
+      if(mobileDrawer.classList.contains('open')) ariaAnnounce('Menu dibuka');
+      else ariaAnnounce('Menu ditutup');
+    });
+    obs.observe(mobileDrawer, {attributes:true, attributeFilter:['class']});
+
+  </script>
+</body>
+</html>
